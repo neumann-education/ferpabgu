@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Exención de FERPA</title>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0078D4; --secondary-color: #106EBE; --accent-color: #2B88D8;
+            --background-color: #F5F5F5; --text-color: #323130; --border-color: #EDEBE9;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05); --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.12); --gradient: linear-gradient(135deg, #0078D4, #106EBE);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--background-color) url('https://cdn.bitrix24.es/b15495391/landing/164/164ee2aa6aea49cb44d001c7da59a84c/beta-port-01_1x.jpg') no-repeat center center / cover;
+            background-attachment: fixed; color: var(--text-color); line-height: 1.4; min-height: 100vh;
+        }
+        .container { max-width: 750px; margin: 1rem auto; padding: 0 1rem; }
+        .form-card { background: white; border-radius: 4px; box-shadow: var(--shadow-lg); overflow: hidden; }
+        .form-header { background: var(--gradient); padding: 1.5rem; text-align: center; }
+        .form-header h1 { color: white; font-size: 1.8rem; font-weight: 500; }
+        .form-header p { color: rgba(255, 255, 255, 0.9); font-size: 0.95rem; }
+        .section { background: white; margin: 0.8rem; padding: 1.2rem; border-radius: 4px; border: 1px solid var(--border-color); }
+        .section h2 { color: var(--primary-color); font-size: 1.3rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.6rem; font-weight: 500; }
+        .section h2 i { color: var(--accent-color); font-size: 1.2rem; }
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+        .form-group { margin-bottom: 0.8rem; }
+        label { display: block; margin-bottom: 0.4rem; font-weight: 500; color: var(--text-color); font-size: 0.9rem; }
+        input[type="text"], input[type="email"], input[type="tel"], select { width: 100%; padding: 0.7rem 0.8rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.95rem; }
+        input:focus, select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.1); outline: none; }
+        .requirements label { display: flex; align-items: flex-start; padding: 0.8rem; background: #FAFAFA; border-radius: 4px; margin-bottom: 0.6rem; cursor: pointer; border: 1px solid var(--border-color); }
+        .requirements label:hover { background: white; border-color: var(--primary-color); }
+        input[type="checkbox"] { margin: 0.2rem 0.8rem 0 0; width: 1.2rem; height: 1.2rem; flex-shrink: 0; }
+        .signature-container { display: flex; flex-direction: column; align-items: center; gap: 1rem; margin: 1.5rem 0; }
+        #signature-pad { border: 1px solid var(--border-color); border-radius: 4px; background: white; width: 100%; max-width: 400px; height: 200px; cursor: crosshair; }
+        button { padding: 0.8rem 1.5rem; border: none; border-radius: 4px; font-weight: 500; cursor: pointer; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.4rem; }
+        button.secondary { background: #F3F2F1; color: var(--text-color); }
+        .submit-btn { background: var(--primary-color); color: white; width: 100%; padding: 1rem; font-size: 1rem; margin-top: 1.5rem; }
+        .section-note { color: #605E5C; font-size: 0.85rem; margin-bottom: 1rem; font-style: italic; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-card">
+            <div class="form-header">
+                <h1>Formulario de Exención de FERPA</h1>
+                <p>Otorgue acceso a sus registros educativos</p>
+            </div>
+
+            <form id="ferpaForm" onsubmit="submitForm(event)">
+                <div class="section">
+                    <h2><i class="fas fa-user-shield"></i> INFORMACIÓN DEL ESTUDIANTE</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Apellido:</label>
+                            <input type="text" name="lastName" required placeholder="Ingrese su apellido">
+                        </div>
+                        <div class="form-group">
+                            <label>Nombre:</label>
+                            <input type="text" name="firstName" required placeholder="Ingrese su nombre">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Dirección Postal:</label>
+                        <input type="text" name="address" required placeholder="Ingrese su dirección">
+                    </div>
+                     <div class="form-row">
+                        <div class="form-group">
+                            <label>Ciudad:</label>
+                            <input type="text" name="city" required placeholder="Ingrese su ciudad">
+                        </div>
+                         <div class="form-group">
+                            <label>País:</label>
+                            <select name="country" id="country" required onchange="toggleStateField()">
+                                <option value="">Seleccione un País</option>
+                                <option value="United States">Estados Unidos</option>
+                                <option value="Argentina">Argentina</option>
+                                <option value="Brazil">Brasil</option>
+                                <option value="Canada">Canadá</option>
+                                <option value="Chile">Chile</option>
+                                <option value="Colombia">Colombia</option>
+                                <option value="Costa Rica">Costa Rica</option>
+                                <option value="Ecuador">Ecuador</option>
+                                <option value="Honduras">Honduras</option>
+                                <option value="Mexico">México</option>
+                                <option value="Panamá">Panamá</option>
+                                <option value="Peru">Perú</option>
+                                <option value="Republica Dominicana">República Dominicana</option>
+                                <option value="Spain">España</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="stateField" style="display: none;">
+                            <label>Estado (Solo EE.UU.):</label>
+                            <input type="text" name="state" id="state" placeholder="Ingrese su estado">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Número de Teléfono:</label>
+                            <input type="tel" name="phoneCell" required placeholder="Ingrese su teléfono">
+                        </div>
+                        <div class="form-group">
+                            <label>Dirección de correo electrónico:</label>
+                            <input type="email" name="email" required placeholder="Ingrese su email">
+                        </div>
+                    </div>
+
+                    <hr style="margin: 2rem 0;">
+
+                    <h3>AUTORIZACIÓN</h3>
+                    <p class="section-note">Doy permiso a Blackwell Global University para divulgar el tipo de información seleccionada a continuación a los destinatarios que se enumeran a continuación.</p>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nombre completo de la persona autorizada para estos registros:</label>
+                            <input type="text" name="ferpaAuthorizedPerson1" required placeholder="Ingrese nombre completo">
+                        </div>
+                        <div class="form-group">
+                            <label>Parentesco:</label>
+                            <input type="text" name="ferpaRelationship1" required placeholder="Ej: Padre, Cónyuge">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nombre completo de la persona autorizada para estos registros:</label>
+                            <input type="text" name="ferpaAuthorizedPerson2" placeholder="Opcional">
+                        </div>
+                        <div class="form-group">
+                            <label>Parentesco:</label>
+                            <input type="text" name="ferpaRelationship2" placeholder="Opcional">
+                        </div>
+                    </div>
+                    
+                    <hr style="margin: 2rem 0;">
+                    
+                    <h3>TIPOS DE INFORMACIÓN A DIVULGAR</h3>
+                    <p class="section-note">Marque los registros que autoriza a divulgar.</p>
+                    <div class="requirements">
+                        <label>
+                            <input type="checkbox" name="ferpaAllRecords" onchange="toggleAllFerpaRecords(this.checked)">
+                            <div><strong>Todos los registros</strong></div>
+                        </label>
+                        <label>
+                            <input type="checkbox" name="ferpaAccounting" class="ferpa-specific">
+                            <div><strong>Contabilidad</strong><p>Saldos de matrícula, cuotas, retenciones, etc.</p></div>
+                        </label>
+                        <label>
+                            <input type="checkbox" name="ferpaAdmission" class="ferpa-specific">
+                            <div><strong>Admisión</strong><p>Fechas de solicitud, programas, estado de admisión, etc.</p></div>
+                        </label>
+                        <label>
+                            <input type="checkbox" name="ferpaRegistration" class="ferpa-specific">
+                            <div><strong>Matrícula</strong><p>Inscripción actual, estado de inscripción, semestres, etc.</p></div>
+                        </label>
+                        <label>
+                            <input type="checkbox" name="ferpaAcademicRecords" class="ferpa-specific">
+                            <div><strong>Expedientes Académicos</strong><p>Cursos, calificaciones, GPA, progreso académico, etc.</p></div>
+                        </label>
+                         <label>
+                            <input type="checkbox" name="ferpaFinancialAid" class="ferpa-specific">
+                            <div><strong>Ayuda financiera</strong><p>Toda la información general sobre ayuda financiera.</p></div>
+                        </label>
+                    </div>
+
+                    <hr style="margin: 2rem 0;">
+
+                    <h3>FIRMA</h3>
+                     <div class="form-group">
+                        <label>Fecha:</label>
+                        <input type="text" id="currentDate" name="date" readonly>
+                    </div>
+                    <div class="signature-container">
+                        <label>Firma del estudiante:</label>
+                        <canvas id="signature-pad"></canvas>
+                        <button type="button" class="secondary" onclick="clearSignature()" style="margin-top: 1rem;">Limpiar Firma</button>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Enviar Formulario</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    <script>
+        // ¡¡¡ IMPORTANTE !!! Pega aquí la NUEVA URL de tu implementación.
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_Rtb7Z5a5mmGq0axXrufAjeRrRLeysVWS3vHbOB832-o4w7A1kvu91mhyt1mtF9Lt0Q/exec';
+
+        async function submitForm(event) {
+            event.preventDefault();
+
+            if (!validateForm()) return;
+
+            Swal.fire({
+                title: 'Enviando formulario...',
+                text: 'Por favor espere, estamos generando su documento.',
+                allowOutsideClick: false, showConfirmButton: false,
+                willOpen: () => { Swal.showLoading(); }
+            });
+
+            const form = document.getElementById('ferpaForm');
+            const formData = {};
+            new FormData(form).forEach((value, key) => {
+                if (form.querySelector(`[name="${key}"]`)?.type === 'checkbox') {
+                    formData[key] = true;
+                } else {
+                    formData[key] = value;
+                }
+            });
+            form.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                if (!cb.checked) formData[cb.name] = false;
+            });
+
+            formData.signature = signaturePad.isEmpty() ? '' : signaturePad.toDataURL('image/png');
+
+            try {
+                const response = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(formData) });
+                const result = await response.json();
+
+                if (result.success && result.ferpaUrl) {
+                    Swal.fire({
+                        title: '¡Formulario Enviado!',
+                        html: `Su documento ha sido generado con éxito.<br><br>
+                               <a href="${result.ferpaUrl}" target="_blank" class="submit-btn" style="text-decoration:none; display:inline-block; margin-top:10px;">Descargar Documento (PDF)</a>`,
+                        icon: 'success', confirmButtonText: 'Cerrar'
+                    }).then(() => { location.reload(); });
+                } else {
+                    Swal.fire('Error', result.error || 'Ocurrió un error al procesar su solicitud.', 'error');
+                }
+            } catch (error) {
+                Swal.fire('Error de Conexión', 'No se pudo enviar el formulario: ' + error.message, 'error');
+            }
+        }
+        
+        const canvas = document.getElementById('signature-pad');
+        const signaturePad = new SignaturePad(canvas, { backgroundColor: 'rgb(255, 255, 255)' });
+        
+        function resizeCanvas() {
+            const ratio =  Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            canvas.getContext("2d").scale(ratio, ratio);
+            signaturePad.clear();
+        }
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+
+        function clearSignature() { signaturePad.clear(); }
+
+        window.onload = function() {
+            const today = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').value = today.toLocaleDateString('es-ES', options);
+        };
+
+        function toggleStateField() {
+            const countrySelect = document.getElementById('country');
+            const stateField = document.getElementById('stateField');
+            const stateInput = document.getElementById('state');
+            if (countrySelect.value === 'United States') {
+                stateField.style.display = 'block';
+                stateInput.required = true;
+            } else {
+                stateField.style.display = 'none';
+                stateInput.required = false;
+                stateInput.value = '';
+            }
+        }
+        
+        function toggleAllFerpaRecords(checked) {
+            document.querySelectorAll('.ferpa-specific').forEach(checkbox => {
+                checkbox.checked = checked;
+            });
+        }
+        
+        document.querySelectorAll('.ferpa-specific').forEach(cb => {
+            cb.addEventListener('change', () => {
+                if(!cb.checked) document.querySelector('[name="ferpaAllRecords"]').checked = false;
+            });
+        });
+
+        function validateForm() {
+            const form = document.getElementById('ferpaForm');
+            if (!form.checkValidity()) {
+                 Swal.fire('Campos Incompletos', 'Por favor, rellene todos los campos obligatorios.', 'warning');
+                return false;
+            }
+            if (signaturePad.isEmpty()) {
+                Swal.fire('Firma Requerida', 'Por favor, firme en el recuadro antes de enviar.', 'warning');
+                return false;
+            }
+            const authorizedPerson1 = document.querySelector('[name="ferpaAuthorizedPerson1"]').value.trim();
+             if (!authorizedPerson1) {
+                Swal.fire('Autorización Requerida', 'Debe especificar al menos una persona autorizada.', 'warning');
+                return false;
+             }
+            return true;
+        }
+    </script>
+</body>
+</html>
